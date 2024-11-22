@@ -102,7 +102,8 @@ class ProductController extends Controller
             //     ->orWhere('description', 'like', "%{$keyword}%")
             //     ->get();
 
-            $products = Product::where('name', 'like', "%{$keyword}%")->paginate(10);
+            // $products = Product::where('name', 'like', "%{$keyword}%")->orderByDesc('name')->paginate(10);
+            $products = Product::where('name', 'like', "%{$keyword}%")->orderBy('name')->paginate(10);
         }
 
         // $result = $products->get();
