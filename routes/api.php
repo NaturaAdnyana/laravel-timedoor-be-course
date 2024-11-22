@@ -33,6 +33,7 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('products', ProductController::class);
     Route::get('products-list', [ProductController::class, 'showByPage'])->name('products.showByPage');
+    Route::get('search', [ProductController::class, 'searchByName'])->name('products.searchByName');
     Route::post('logout', [UserController::class, 'logout'])->name('logout')->middleware(middleware: 'auth:sanctum');
 });
 

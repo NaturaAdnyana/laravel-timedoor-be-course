@@ -88,4 +88,25 @@ class ProductController extends Controller
         $product->delete();
         return response()->json(['message' => 'Produk berhasil dihapus']);
     }
+
+    public function searchByName(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $products = new Product;
+
+        if ($keyword) {
+            // $products = $products->where('name', 'LIKE', "%{$keyword}%");
+
+            // $products = Product::where('name', 'like', "%{$keyword}%")
+            //     ->orWhere('description', 'like', "%{$keyword}%")
+            //     ->get();
+
+            $products = Product::where('name', 'like', "%{$keyword}%")->paginate(10);
+        }
+
+        // $result = $products->get();
+
+        return response()->json($products);
+    }
 }
