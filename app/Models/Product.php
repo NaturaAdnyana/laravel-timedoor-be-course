@@ -13,5 +13,22 @@ class Product extends Model
         'name',
         'price',
         'stock',
+        'category_id',
+        'brand_id',
     ];
+
+    protected $guarded = [
+        'created_at',
+        'updated_at',
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 }

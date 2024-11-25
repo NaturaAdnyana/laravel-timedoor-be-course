@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'stock' => $this->faker->numberBetween(0, 100),
             // 'category_id' => Category::inRandomOrder()->first()->id,
             'category_id' => $this->faker->numberBetween(1, 20),
+            'brand_id' => $this->faker->numberBetween(1, 20)
         ];
     }
 }

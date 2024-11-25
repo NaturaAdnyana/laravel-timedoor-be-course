@@ -10,9 +10,42 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
+        $keyword = $request->input('keyword');
+        $categoryName = $request->input('category');
+        $brandName = $request->input('brand');
+        $sortBy = $request->input('sort_by', 'name');
+        $sortOrder = $request->input('sort_order', 'asc');
+
+        $query = Product::query();
+
+        if ($keyword) {
+            $query->where('name', 'like', "%{$keyword}%");
+        }
+
+        if ($categoryName) {
+            $query->whereHas('category', function ($q) use ($categoryName) {
+                $q->where('name', 'like', "%{$categoryName}%");
+            });
+        }
+
+        if ($brandName) {
+            $query->whereHas('brand', function ($q) use ($brandName) {
+                $q->where('name', 'like', "%{$brandName}%");
+            });
+        }
+
+        $products = $query->with('category', 'brand')
+            ->orderBy('name')
+            ->paginate(10);
+
+        if (in_array($sortBy, ['name', 'price', 'created_at'])) {
+            $query->orderBy($sortBy, $sortOrder);
+        } else {
+            $query->orderBy('name', 'asc');
+        }
+
         return response()->json(['products' => $products]);
     }
     /**
@@ -43,18 +76,12 @@ class ProductController extends Controller
     public function show(string $id)
     {
         // $product = Product::findOrFail($id);
-        $product = Product::find($id);
+        $product = Product::with('category')->with('brand')->find($id);
         if ($product) {
             return response()->json(['product' => $product]);
         } else {
             return response()->json(['message' => 'Produk tidak ditemukan'], 404);
         }
-    }
-
-    public function showByPage()
-    {
-        $products = Product::paginate(10);
-        return response()->json(['products' => $products]);
     }
 
     /**
@@ -87,27 +114,5 @@ class ProductController extends Controller
         }
         $product->delete();
         return response()->json(['message' => 'Produk berhasil dihapus']);
-    }
-
-    public function searchByName(Request $request)
-    {
-        $keyword = $request->input('keyword');
-
-        $products = new Product;
-
-        if ($keyword) {
-            // $products = $products->where('name', 'LIKE', "%{$keyword}%");
-
-            // $products = Product::where('name', 'like', "%{$keyword}%")
-            //     ->orWhere('description', 'like', "%{$keyword}%")
-            //     ->get();
-
-            // $products = Product::where('name', 'like', "%{$keyword}%")->orderByDesc('name')->paginate(10);
-            $products = Product::where('name', 'like', "%{$keyword}%")->orderBy('name')->paginate(10);
-        }
-
-        // $result = $products->get();
-
-        return response()->json($products);
     }
 }
