@@ -32,6 +32,7 @@ use App\Http\Controllers\UserController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('products', ProductController::class);
+    Route::post('/upload', [ProductController::class, 'uploadFile']);
     Route::post('logout', [UserController::class, 'logout'])->name('logout')->middleware(middleware: 'auth:sanctum');
 });
 

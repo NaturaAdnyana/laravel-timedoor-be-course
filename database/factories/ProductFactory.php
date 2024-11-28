@@ -21,6 +21,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->word,
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'stock' => $this->faker->numberBetween(0, 100),
+            'image_url' => "https://karanzi.websites.co.in/obaju-turquoise/img/product-placeholder.png",
             // 'category_id' => Category::inRandomOrder()->first()->id,
             'category_id' => $this->faker->numberBetween(1, 20),
             'brand_id' => $this->faker->numberBetween(1, 20)
